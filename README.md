@@ -248,5 +248,234 @@ const withAuth = (Component) => (props) => {
 
 ---
 
+# 📌 React Interview Questions (Moderate to Difficult)
+
+## 🔥 Performance & Optimization
+
+### 2️⃣0️ How does React handle re-renders, and how can you prevent unnecessary renders?
+
+React re-renders a component when:
+- The component's **state** or **props** change.
+- The **parent component re-renders**.
+
+Ways to prevent unnecessary re-renders:
+- **Use `React.memo()`** to avoid re-rendering if props haven’t changed.
+- **Use `useCallback()` and `useMemo()`** to optimize functions and computed values.
+- **Optimize state updates** by keeping minimal and required states.
+
+Example:
+
+```jsx
+const OptimizedComponent = React.memo(({ name }) => {
+  console.log("Rendering...");
+  return <h1>Hello, {name}!</h1>;
+});
+```
+
+---
+
+### 2️⃣1️ What is reconciliation in React?
+
+Reconciliation is the **process of updating the DOM efficiently** by comparing the Virtual DOM with the previous state and applying minimal changes.
+
+React uses the **diffing algorithm** to detect changes and update only the modified parts.
+
+---
+
+### 2️⃣2️ Explain React’s diffing algorithm and why it’s important.
+
+React's **diffing algorithm** optimizes updates by:
+1. **Comparing Virtual DOM changes**.
+2. **Using a "key" prop** to track elements in lists.
+3. **Minimizing DOM updates** by only changing the necessary parts.
+
+Importance:
+- Improves **performance**.
+- Reduces **unnecessary re-renders**.
+
+Example:
+
+```jsx
+<ul>
+  {items.map((item) => (
+    <li key={item.id}>{item.name}</li>
+  ))}
+</ul>
+```
+
+---
+
+### 2️⃣3️ What is `React.lazy` and `Suspense`, and how do they enable lazy loading?
+
+**Lazy loading** helps load components **only when needed**, improving initial page load performance.
+
+- **`React.lazy()`** dynamically loads a component.
+- **`Suspense`** is used to show a fallback while loading.
+
+Example:
+
+```jsx
+const LazyComponent = React.lazy(() => import("./MyComponent"));
+
+function App() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LazyComponent />
+    </Suspense>
+  );
+}
+```
+
+---
+
+### 2️⃣4️ How do error boundaries work, and why are they useful?
+
+Error boundaries catch **JavaScript errors** in React components and prevent crashes.
+
+- They use **`componentDidCatch`** (Class Components) or **Error Boundary HOCs**.
+
+Example:
+
+```jsx
+class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error("Error caught:", error, info);
+  }
+
+  render() {
+    return this.state.hasError ? <h1>Something went wrong.</h1> : this.props.children;
+  }
+}
+```
+
+Usage:
+
+```jsx
+<ErrorBoundary>
+  <MyComponent />
+</ErrorBoundary>
+```
+
+---
+
+### 2️⃣5️ How do you handle authentication and protected routes in React?
+
+React **authentication** is typically handled using JWT tokens and protected routes.
+
+Steps:
+1. Store the **auth token** in **localStorage** or **cookies**.
+2. Create a **Protected Route** component.
+
+Example:
+
+```jsx
+const ProtectedRoute = ({ children }) => {
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+<Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+```
+
+---
+
+### 2️⃣6️ What are render props, and how do they compare to HOCs?
+
+**Render Props** allow components to **share logic** by passing a function as a prop.
+
+Example:
+
+```jsx
+const MouseTracker = ({ render }) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  return <div onMouseMove={(e) => setPosition({ x: e.clientX, y: e.clientY })}>
+    {render(position)}
+  </div>;
+};
+
+<MouseTracker render={({ x, y }) => <h1>Mouse at ({x}, {y})</h1>} />
+```
+
+**Comparison with HOCs:**
+- **HOCs** wrap components and add extra logic.
+- **Render Props** use functions to pass logic dynamically.
+
+---
+
+## ⚙️ Advanced React & Server-Side Features
+
+### 2️⃣7️ What is the difference between Server-Side Rendering (SSR) and Client-Side Rendering (CSR)?
+
+| Feature          | Server-Side Rendering (SSR) | Client-Side Rendering (CSR) |
+|-----------------|---------------------------|---------------------------|
+| Where it runs   | Server generates HTML     | Browser renders UI       |
+| Performance     | Faster initial load       | Slower initial load      |
+| SEO            | Better for SEO            | Not SEO-friendly         |
+
+**Example: Next.js (SSR)**
+
+```jsx
+export async function getServerSideProps() {
+  const data = await fetchAPI();
+  return { props: { data } };
+}
+```
+
+---
+
+### 2️⃣8️ What is React Fiber, and how does it improve rendering?
+
+**React Fiber** is the new **reconciliation algorithm** introduced in React 16 for:
+- **Faster rendering** using a priority-based update system.
+- **Interruptible rendering** for smoother user experience.
+
+---
+
+### 2️⃣9️ What is Concurrent Mode, and how does it enhance performance?
+
+**Concurrent Mode** allows React to **pause and resume rendering**, making apps more responsive.
+
+Example:
+
+```jsx
+import { createRoot } from "react-dom/client";
+
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);
+```
+
+**Benefits:**
+- **Non-blocking UI updates**.
+- **Better handling of large lists**.
+
+---
+
+### 3️⃣0️ How do you test React components? What are the most common testing libraries?
+
+**Common Testing Libraries:**
+- **Jest** (unit testing)
+- **React Testing Library** (DOM testing)
+- **Cypress** (end-to-end testing)
+
+**Example Test (Jest + React Testing Library):**
+
+```jsx
+import { render, screen } from "@testing-library/react";
+import MyComponent from "./MyComponent";
+
+test("renders the correct text", () => {
+  render(<MyComponent />);
+  expect(screen.getByText("Hello, World!")).toBeInTheDocument();
+});
+```
+
+
+
 
 
